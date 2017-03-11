@@ -1,0 +1,63 @@
+---
+- name: Install Apache package
+  yum: >
+    name={{ item }}
+    state=installed
+  with_items:
+    - httpd
+
+- name: Deploy default httpd.conf
+  template: >
+    src=httpd.conf.tpl
+    dest={{ apache_config_file }}
+    owner=root
+    group=root
+    mode=0644
+  notify: restart_httpd
+
+- name: Create {{ apache_document_root }} directory
+  file: >
+    state=directory
+    path={{ apache_document_root }}
+    mode=0755
+    owner={{ apache_user }}
+    group={{ apache_group }}
+
+- name: Removing default virtual hosts
+  file: >
+    path={{ item }}
+    state=absent
+  with_items:
+    - "{{ apache_directory }}/conf.d/autoindex.conf"
+    - "{{ apache_directory }}/conf.d/userdir.conf"
+    - "{{ apache_directory }}/conf.d/welcome.conf"
+  when: apache_remove_default_vhosts | bool
+  notify: restart_httpd
+
+- name: Adding virtual host configurations
+  template: >
+    src=vhost.conf.tpl
+    dest="{{ apache_sites_available }}/{{ item.name }}.conf"
+    owner=root
+    group=root
+    mode=0644
+  with_items: "{{ apache_vhosts }}"
+  when: apache_vhosts is defined
+  notify: restart_httpd
+
+- name: Creating DocumentRoot for each virtual host
+  file: >
+    path="{{ item.document_root | default(apache_document_root + '/' + item.name) }}"
+    state=directory
+    owner="{{ item.deploy_user | default(apache_user) }}"
+    group={{ apache_group }}
+    mode=0755
+  with_items:
+    - "{{ apache_vhosts }}"
+  when: apache_vhosts is defined
+
+- name: Start and enable Apache service
+  service: >
+    name=httpd
+    state=started
+    enabled=yes
