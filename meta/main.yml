@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: Vinícius Figueiredo
+  description: Installs and configures Apache Server in CentOS/RHEL systems.
+  license: MIT
+
+  platforms:
+    - name: EL
+      versions:
+        - 7
+
+  galaxy_tags:
+    - system
+
+dependencies: []

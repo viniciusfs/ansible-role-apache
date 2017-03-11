@@ -1,0 +1,11 @@
+---
+apache_user: apache
+apache_group: apache
+apache_server_admin: root@localhost
+apache_http_ports: [ 80 ]
+apache_directory: /etc/httpd
+apache_config_file: "{{ apache_directory }}/conf/httpd.conf"
+apache_config_directory: "{{ apache_directory }}/conf.d"
+apache_document_root: "/var/www"
+apache_remove_default_vhosts: true
+apache_vhosts: []
