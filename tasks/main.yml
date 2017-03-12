@@ -37,7 +37,7 @@
 - name: Adding virtual host configurations
   template: >
     src=vhost.conf.tpl
-    dest="{{ apache_sites_available }}/{{ item.name }}.conf"
+    dest="{{ apache_directory }}/conf.d/{{ item.name }}.conf"
     owner=root
     group=root
     mode=0644
