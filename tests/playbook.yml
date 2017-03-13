@@ -2,3 +2,5 @@
 - hosts: all
   roles:
     - role: ansible-role-apache
+      apache_vhosts:
+        - name: test.localhost
