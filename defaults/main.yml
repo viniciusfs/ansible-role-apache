@@ -6,6 +6,7 @@ apache_http_ports: [ 80 ]
 apache_directory: /etc/httpd
 apache_config_file: "{{ apache_directory }}/conf/httpd.conf"
 apache_config_directory: "{{ apache_directory }}/conf.d"
-apache_document_root: "/var/www"
+apache_log_directory: "/var/log/httpd"
+apache_document_root: "/var/www/html"
 apache_remove_default_vhosts: true
 apache_vhosts: []
